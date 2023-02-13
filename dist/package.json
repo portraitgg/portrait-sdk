@@ -1,0 +1,26 @@
+{
+  "name": "portrait-sdk",
+  "version": "0.0.1",
+  "description": "Portrait SDK",
+  "main": "lib/es5/index.js",
+  "module": "lib/es6/index.js",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:portraitgg/portrait-sdk.git"
+  },
+  "files": [
+    "lib",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "keywords": [
+    "portrait",
+    "sdk",
+    "portrait-sdk"
+  ],
+  "author": "Ryan Shahine <ryan@portrait.gg> (https://portrait.gg)",
+  "license": "MIT"
+}

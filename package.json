@@ -1,0 +1,16 @@
+{
+  "name": "portrait-sdk",
+  "version": "0.0.1",
+  "repository": "git@github.com:portraitgg/portrait-sdk.git",
+  "author": "Ryan Shahine <ryan@portrait.gg>",
+  "license": "MIT",
+  "scripts": {
+    "compile": "rm -rf dist/lib && tsc && tsc --build tsconfig.es5.json"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "ethers": "^6.0.3"
+  }
+}
