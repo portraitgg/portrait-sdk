@@ -5,7 +5,9 @@
   "author": "Ryan Shahine <ryan@portrait.gg>",
   "license": "MIT",
   "scripts": {
-    "compile": "rm -rf dist/lib && tsc && tsc --build tsconfig.es5.json"
+    "compile": "rm -rf dist/lib && tsc && tsc --build tsconfig.es5.json",
+    "es5": "rm -rf dist/lib && tsc --build tsconfig.es5.json",
+    "es6": "rm -rf dist/lib && tsc"
   },
   "devDependencies": {
     "typescript": "^4.9.5"
