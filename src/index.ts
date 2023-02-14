@@ -6,7 +6,7 @@ import betaPassABI from './abi/betaPassABI';
 export class Portrait {
   portraitNetwork?: string = 'goerli';
   alchemyApiKey?: string;
-  portraitProvider?: ethers.AbstractProvider = this.alchemyApiKey
+  portraitProvider?: any = this.alchemyApiKey
     ? new ethers.AlchemyProvider(this.portraitNetwork, this.alchemyApiKey)
     : ethers.getDefaultProvider(this.portraitNetwork);
   // TO-DO: Add the correct Collective Portrait contract address
