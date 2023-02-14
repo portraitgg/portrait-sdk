@@ -1,8 +1,8 @@
 {
   "name": "portrait-sdk",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "dependencies": {
-    "ethers": "^6.0.3"
+    "ethers": "^5.7.2"
   },
   "description": "Portrait SDK",
   "main": "lib/es5/index.js",
