@@ -29,7 +29,7 @@ export class Portrait {
   portraitBetaNFTContract?: ethers.ContractInterface = new ethers.Contract(
     '0xCf39966d2De5d1ee035B66504BcB701adc9DDa47',
     this.betaPassABI,
-    this.portraitProvider
+    this.alchemyApiKey
       ? new ethers.AlchemyProvider('mainnet', this.alchemyApiKey)
       : ethers.getDefaultProvider('mainnet'),
   );
