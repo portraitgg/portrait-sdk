@@ -5,7 +5,7 @@
       "declaration": true,
       "outDir": "./dist/lib/es5",
       "moduleResolution": "node",
-      "lib": ["ES2020", "DOM"],
+      "lib": ["ES2021", "DOM"],
       "skipLibCheck": true,
     },
     "include": ["src/**/*"]
