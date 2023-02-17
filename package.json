@@ -1,6 +1,6 @@
 {
   "name": "portrait-sdk",
-  "version": "0.0.81",
+  "version": "0.0.8",
   "repository": "git@github.com:portraitgg/portrait-sdk.git",
   "author": "Ryan Shahine <ryan@portrait.gg>",
   "license": "MIT",
@@ -13,6 +13,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "ethers": "^5.7.2"
+    "ethers": "^5.7.2",
+    "multiformats": "^11.0.1"
   }
 }
