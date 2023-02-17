@@ -22,9 +22,9 @@ import { Portrait } from 'portrait-sdk';
 
 After importing the package, you can initialize the `Portrait` class by calling its constructor:
 
-jsCopy code
-
-`const portrait = new Portrait();`
+```ts
+const portrait = new Portrait();
+```
 
 This will initialize the SDK with default values. However, you can also customize the SDK by passing in parameters to the constructor. The available parameters are:
 
