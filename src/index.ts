@@ -66,7 +66,7 @@ export class Portrait {
   collectivePortraitRegistryABI?: ethers.utils.Interface =
     new ethers.utils.Interface(collectivePortraitRegistryABI);
   portraitCollectiveContract?: any = new ethers.Contract(
-    '0xE745bD3a55B50C2e167980C6438f46e20c906DB3',
+    '0xA0355346B2DAe8681e5A3a4106fe01f88070038D',
     this.collectivePortraitRegistryABI,
     this.portraitWallet || this.portraitProvider,
   );
