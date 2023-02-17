@@ -1,6 +1,6 @@
 {
   "name": "portrait-sdk",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "dependencies": {
     "ethers": "^5.7.2",
     "multiformats": "^11.0.1"
