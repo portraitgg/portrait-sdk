@@ -3,7 +3,7 @@
   "version": "0.0.8",
   "dependencies": {
     "ethers": "^5.7.2",
-    "multiformats": "^11.0.1"
+    "multiformats": "^9.9.0"
   },
   "description": "Portrait SDK",
   "main": "lib/es5/index.js",

@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
 import { CID } from 'multiformats/cid';
-import { MultihashHasher } from 'multiformats/hashes/interface';
 import { sha256 } from 'multiformats/hashes/sha2';
 import {
   UserPortraitAddress,
@@ -240,7 +239,7 @@ export function toCollectivePortraitName(
  *
  * @beta
  */
-export function fetchPortrait(
+export async function fetchPortrait(
   ipfsGateways: string[],
   arweaveGateway: string,
   ipfsHash: string,
@@ -248,13 +247,13 @@ export function fetchPortrait(
   ethereumAddress?: string,
 ): Promise<PortraitObject> {
   return Promise.any([
-    fetchPortraitFromIPFS(ipfsGateways, ipfsHash),
     fetchPortraitFromArweave(
       arweaveGateway,
       arweaveGraphQLprovider,
       ipfsHash,
       ethereumAddress ? ethereumAddress : null,
     ),
+    fetchPortraitFromIPFS(ipfsGateways, ipfsHash),
   ]);
 }
 
@@ -360,44 +359,36 @@ async function fetchPortraitFromArweave(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      query:
-        `query {
-        transactions(
-          ` +
-        (cursor ? `first: 10, after: "${cursor}",` : null) +
-        `
-          sort: HEIGHT_ASC,
-          tags: [
-            {
-              name: "IPFS-Add",
-              values: [],
-            },
-            {
-              name: "Protocol",
-              values: ["Portrait"],
-            },
-            {
-              name: "IPFS-Add",
-              values: ["${ipfsHash}"]
-            },
-            ` +
-        (author ? `{ name: "Author", values: ["${author}"] },` : null) +
-        `
-           ]
-        ) {
-          edges {
-            cursor
-            node {
-              id
-              
-              tags {
-                name
-                value
+      query: `
+        query {
+          transactions(
+            ${cursor ? `first: 10, after: "${cursor}",` : 'first: 10,'}
+            sort: HEIGHT_ASC,
+            tags: [
+              {
+                name: "Protocol",
+                values: ["Portrait"]
+              },
+              {
+                name: "IPFS-Add",
+                values: ["${ipfsHash}"]
+              }
+              ${author ? `, { name: "Author", values: ["${author}"] }` : ''}
+            ]
+          ) {
+            edges {
+              cursor
+              node {
+                id
+                tags {
+                  name
+                  value
+                }
               }
             }
           }
         }
-      }`,
+      `,
     }),
   });
 
@@ -449,5 +440,5 @@ async function ipfsHashCollision(
   const jsonUint8Array = new TextEncoder().encode(json);
   const digest = await sha256.digest(jsonUint8Array);
   const generatedHash = CID.createV1(0x55, digest);
-  return CID.equals(generatedHash, ipfsHash);
+  return generatedHash.toString() === ipfsHash;
 }

@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { JsonFragment } from '@ethersproject/abi';
 import collectivePortraitRegistryABI from './abi/collectivePortraitRegistryABI';
 import userPortraitRegistryABI from './abi/userPortraitRegistryABI';
 import betaPassABI from './abi/betaPassABI';
@@ -49,62 +50,99 @@ export class Portrait {
    *
    * @beta
    */
-  ethereumPrivateKey?: string;
+
+  ethereumPrivateKey?: ethers.utils.SigningKey;
   alchemyApiKey?: string;
-  portraitNetwork?: string = 'goerli';
-  portraitWallet?: ethers.Wallet = new ethers.Wallet(
-    this.ethereumPrivateKey,
-    this.portraitProvider,
-  );
-  portraitProvider?: any = this.alchemyApiKey
-    ? new ethers.providers.AlchemyProvider(
-        this.portraitNetwork,
-        this.alchemyApiKey,
-      )
-    : ethers.getDefaultProvider(this.portraitNetwork);
+  portraitNetwork?: string;
+  portraitWallet?: ethers.Wallet;
+  portraitProvider?: ethers.providers.Provider;
+  collectivePortraitRegistryABI?: ethers.utils.Interface;
+  portraitCollectiveContract?: any;
+  userPortraitRegistryABI?: ethers.utils.Interface;
+  portraitUserContract?: ethers.Contract;
+  betaPassABI?: ethers.utils.Interface;
+  portraitBetaNFTContract?: ethers.Contract;
+  arweaveGraphQLprovider?: string;
+  arweaveGateway?: string;
+  ipfsGateways?: string[];
+  defaultProvider?: any;
 
-  collectivePortraitRegistryABI?: ethers.utils.Interface =
-    new ethers.utils.Interface(collectivePortraitRegistryABI);
-  portraitCollectiveContract?: any = new ethers.Contract(
-    '0xA0355346B2DAe8681e5A3a4106fe01f88070038D',
-    this.collectivePortraitRegistryABI,
-    this.portraitWallet || this.portraitProvider,
-  );
-
-  userPortraitRegistryABI?: ethers.utils.Interface = new ethers.utils.Interface(
-    userPortraitRegistryABI,
-  );
-  portraitUserContract?: ethers.Contract = new ethers.Contract(
-    '0xCf39966d2De5d1ee035B66504BcB701adc9DDa47',
-    this.userPortraitRegistryABI,
-    this.portraitWallet || this.portraitProvider,
-  );
-
-  betaPassABI?: ethers.utils.Interface = new ethers.utils.Interface(
-    betaPassABI,
-  );
-  portraitBetaNFTContract?: ethers.Contract = new ethers.Contract(
-    '0xCf39966d2De5d1ee035B66504BcB701adc9DDa47',
-    this.betaPassABI,
-    this.alchemyApiKey
-      ? new ethers.providers.AlchemyProvider('mainnet', this.alchemyApiKey)
-      : ethers.getDefaultProvider('mainnet'),
-  );
-
-  arweaveGraphQLprovider?: string =
-    'https://arweave-search.goldsky.com/graphql';
-  arweaveGateway?: string = 'https://arweave.net';
-  ipfsGateways?: string[] = [
-    'https://ipfs.io/ipfs/',
-    'https://cloudflare-ipfs.com/ipfs/',
-    'https://ipfs.infura.io/ipfs/',
-    'https://ipfs.fleek.co/ipfs/',
-    'https://ipfs.dweb.link/ipfs/',
-  ];
-
-  defaultProvider?: any = this.alchemyApiKey
-    ? new ethers.providers.AlchemyProvider('mainnet', this.alchemyApiKey)
-    : ethers.getDefaultProvider('mainnet');
+  constructor(options: {
+    ethereumPrivateKey?: ethers.utils.SigningKey;
+    alchemyApiKey?: string;
+    portraitNetwork?: string;
+    portraitWallet?: ethers.Wallet;
+    portraitProvider?: ethers.providers.Provider;
+    collectivePortraitRegistryABI?: JsonFragment[];
+    portraitCollectiveContract?: any;
+    userPortraitRegistryABI?: JsonFragment[];
+    portraitUserContract?: ethers.Contract;
+    betaPassABI?: JsonFragment[];
+    portraitBetaNFTContract?: ethers.Contract;
+    arweaveGraphQLprovider?: string;
+    arweaveGateway?: string;
+    ipfsGateways?: string[];
+    defaultProvider?: any;
+  }) {
+    this.ethereumPrivateKey = options?.ethereumPrivateKey;
+    this.alchemyApiKey = options?.alchemyApiKey;
+    this.portraitNetwork = options?.portraitNetwork ?? 'goerli';
+    this.portraitWallet =
+      options?.portraitWallet ?? this.ethereumPrivateKey
+        ? new ethers.Wallet(this.ethereumPrivateKey, this.portraitProvider)
+        : undefined;
+    this.portraitProvider =
+      options?.portraitProvider ?? this.alchemyApiKey
+        ? new ethers.providers.AlchemyProvider(
+            this.portraitNetwork,
+            this.alchemyApiKey,
+          )
+        : ethers.getDefaultProvider(this.portraitNetwork);
+    this.collectivePortraitRegistryABI = collectivePortraitRegistryABI
+      ? new ethers.utils.Interface(collectivePortraitRegistryABI)
+      : undefined;
+    this.portraitCollectiveContract =
+      options?.portraitCollectiveContract ??
+      new ethers.Contract(
+        '0xA0355346B2DAe8681e5A3a4106fe01f88070038D',
+        this.collectivePortraitRegistryABI,
+        this.portraitWallet || this.portraitProvider,
+      );
+    this.userPortraitRegistryABI = userPortraitRegistryABI
+      ? new ethers.utils.Interface(userPortraitRegistryABI)
+      : undefined;
+    this.portraitUserContract =
+      options?.portraitUserContract ??
+      new ethers.Contract(
+        '0xCf39966d2De5d1ee035B66504BcB701adc9DDa47',
+        this.userPortraitRegistryABI,
+        this.portraitWallet || this.portraitProvider,
+      );
+    this.betaPassABI = betaPassABI
+      ? new ethers.utils.Interface(betaPassABI)
+      : undefined;
+    this.portraitBetaNFTContract =
+      options?.portraitBetaNFTContract ??
+      new ethers.Contract(
+        '0xCf39966d2De5d1ee035B66504BcB701adc9DDa47',
+        this.betaPassABI,
+        this.portraitWallet || this.portraitProvider,
+      );
+    this.arweaveGraphQLprovider =
+      options?.arweaveGraphQLprovider ??
+      'https://arweave-search.goldsky.com/graphql';
+    this.arweaveGateway = options?.arweaveGateway ?? 'https://arweave.net';
+    this.ipfsGateways = options?.ipfsGateways ?? [
+      'https://ipfs.io/ipfs/',
+      'https://cloudflare-ipfs.com/ipfs/',
+      'https://ipfs.infura.io/ipfs/',
+      'https://ipfs.fleek.co/ipfs/',
+      'https://ipfs.dweb.link/ipfs/',
+    ];
+    this.defaultProvider = options?.alchemyApiKey
+      ? new ethers.providers.AlchemyProvider('mainnet', options.alchemyApiKey)
+      : ethers.getDefaultProvider('mainnet');
+  }
 
   collective = new Collective(this);
   user = new User(this);
@@ -117,16 +155,16 @@ export class Portrait {
    *
    * @beta
    */
-  getPortrait(identity: Identity): Promise<PortraitObject> {
-    const hash = this.getPortraitHash(identity);
+  async getPortrait(identity: Identity): Promise<PortraitObject> {
+    const hash = await this.getPortraitHash(identity);
 
     return fetchPortrait(
       this.ipfsGateways,
       this.arweaveGateway,
       hash,
       this.arweaveGraphQLprovider,
-      this.defaultProvider.resolveName(identity)
-        ? this.defaultProvider.resolveName(identity)
+      (await this.defaultProvider.resolveName(identity))
+        ? await this.defaultProvider.resolveName(identity)
         : isAddress(identity)
         ? identity
         : null,
@@ -144,7 +182,7 @@ export class Portrait {
    *
    * @beta
    */
-  getPortraitHash(identity: Identity): string {
+  async getPortraitHash(identity: Identity): Promise<string> {
     return isAddress(identity)
       ? this.user.getPortraitHash(identity)
       : isValidENSName(identity)
@@ -167,10 +205,12 @@ export class Portrait {
    *
    * @beta
    */
-  hasBetaPass(identity: UserPortraitAddress | UserPortraitENSName): boolean {
+  async hasBetaPass(
+    identity: UserPortraitAddress | UserPortraitENSName,
+  ): Promise<boolean> {
     const address = isAddress(identity)
       ? identity
-      : this.defaultProvider.resolveName(identity);
+      : await this.defaultProvider.resolveName(identity);
 
     return this.portraitBetaNFTContract.balanceOf(address) === 1 ? true : false;
   }
@@ -201,8 +241,8 @@ class Collective {
    * @beta
    * @async
    */
-  getPortrait(name: CollectivePortraitName): Promise<PortraitObject> {
-    const hash = this.getPortraitHash(name);
+  async getPortrait(name: CollectivePortraitName): Promise<PortraitObject> {
+    const hash = await this.getPortraitHash(name);
     return fetchPortrait(
       this.portrait.ipfsGateways,
       this.portrait.arweaveGateway,
@@ -218,7 +258,7 @@ class Collective {
    * @beta
    * @async
    */
-  getPortraitHash(name: CollectivePortraitName): string {
+  getPortraitHash(name: CollectivePortraitName): Promise<string> {
     return this.portrait.portraitCollectiveContract.getPortraitHash(name);
   }
 
@@ -384,18 +424,17 @@ class Collective {
    * @beta
    * @async
    */
-  isAuction(identity: CollectivePortraitName | number): boolean {
+  async isAuction(identity: CollectivePortraitName | number): Promise<boolean> {
     const validUntil = this.getValidUntil(identity);
 
     const currentBlock = this.portrait.portraitProvider.getBlockNumber();
-    const timestamp =
-      this.portrait.portraitProvider.getBlock(currentBlock).timestamp;
+    const block = await this.portrait.portraitProvider.getBlock(currentBlock);
 
-    return validUntil > timestamp
+    return validUntil > block.timestamp
       ? false
-      : this.getAuctionStartTime(identity) > timestamp
+      : this.getAuctionStartTime(identity) > block.timestamp
       ? false
-      : this.getAuctionEndTime(identity) > timestamp
+      : this.getAuctionEndTime(identity) > block.timestamp
       ? false
       : true;
   }
@@ -406,7 +445,7 @@ class Collective {
    * @remarks
    * The auction start time is the time at which the Collective Portrait will be put up for auction.
    * The auction start time is equal to the valid until time + grace period.
-   * It is recommend to use this in conjunction with the timestamp from the block. You can use the Ethers library to get the timestamp from the block.
+   * It is recommended to use this in conjunction with the timestamp from the block. You can use the Ethers library to get the timestamp from the block.
    *
    * @param {CollectivePortraitName | number} identity - The name of the Collective Portrait that the user would like to get the auction start time for.
    * @returns {number} - The auction start time of the Collective Portrait.
@@ -522,18 +561,16 @@ class Collective {
    * It is recommend to use this in conjunction with the timestamp from the block. You can use the Ethers library to get the timestamp from the block.
    *
    * @param {CollectivePortraitName} identity - The name of the Collective Portrait that the user would like to check if it is available for registration.
-   * @returns {boolean} - True if the Collective Portrait is available for registration, false otherwise.
+   * @returns {Promise<boolean>} - True if the Collective Portrait is available for registration, false otherwise.
    * @beta
    * @async
    */
-  isAvailable(identity: CollectivePortraitName): boolean {
+  async isAvailable(identity: CollectivePortraitName): Promise<boolean> {
     const validUntil = this.getValidUntil(identity);
 
     const currentBlock = this.portrait.portraitProvider.getBlockNumber();
-    const timestamp =
-      this.portrait.portraitProvider.getBlock(currentBlock).timestamp;
-
-    return validUntil + this.getGracePeriod() > timestamp ? true : false;
+    const block = await this.portrait.portraitProvider.getBlock(currentBlock);
+    return validUntil + this.getGracePeriod() > block.timestamp ? true : false;
   }
 
   /**
@@ -829,10 +866,10 @@ class User {
    * @throws {Error} - Will throw an error if the user does not have a Portrait.
    * @throws {Error} - Will throw an error if the user's Portrait is not a valid JSON object.
    */
-  getPortrait(
+  async getPortrait(
     userAddress: Exclude<Identity, CollectivePortraitName>,
   ): Promise<JSON> {
-    const hash = this.getPortraitHash(userAddress);
+    const hash = await this.getPortraitHash(userAddress);
     return fetchPortrait(
       this.portrait.ipfsGateways,
       this.portrait.arweaveGateway,
@@ -845,14 +882,14 @@ class User {
   /**
    * Get a User Portrait Hash
    * @param {UserPortraitAddress | UserPortraitENSName} identity - The identity of the user that the user would like to get a hash for.
-   * @returns {string} - The hash of the User Portrait.
+   * @returns {Promise<string>} - The hash of the User Portrait.
    * @beta
    * @throws {Error} - Will throw an error if the identity is not a valid address or ENS name.
    */
-  getPortraitHash(identity: Identity): string {
+  async getPortraitHash(identity: Identity): Promise<string> {
     const address = isAddress(identity)
       ? identity
-      : this.portrait.defaultProvider.resolveName(identity);
+      : await this.portrait.defaultProvider.resolveName(identity);
 
     return this.portrait.portraitUserContract.getPersonalIpfsCID(address);
   }
@@ -896,7 +933,7 @@ class User {
       ? identity
       : this.portrait.defaultProvider.resolveName(identity);
 
-    const wallet = this.portrait.portraitProvider.getSigner();
+    const wallet = this.portrait.portraitProvider;
 
     const message = ethers.utils.solidityKeccak256(
       ['address', 'uint256', 'string'],
