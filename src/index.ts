@@ -748,7 +748,7 @@ class Collective {
    *
    * @remarks
    * Setting the Collective Portrait's hash as a delegate will update the Collective Portrait's hash to the new hash.
-   * A delegate wallet can set the Collective Portrait's hash as a delegate if the delegate wallet has the minimum number of shares required to control the Collective Portrait.
+   * A delegate wallet can set the Collective Portrait's hash as a delegate if the provided signature is valid.
    *
    * @param {CollectivePortraitName} portraitName - The name of the Collective Portrait that the user would like to set the hash for.
    * @param {number} portraitId - The id of the Collective Portrait that the user would like to set the hash for.
