@@ -4,6 +4,7 @@
   "repository": "git@github.com:portraitgg/portrait-sdk.git",
   "author": "Ryan Shahine <ryan@portrait.gg>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "compile": "rm -rf dist/lib && tsc && tsc --build tsconfig.es5.json",
     "es5": "rm -rf dist/lib && tsc --build tsconfig.es5.json",
@@ -14,6 +15,6 @@
   },
   "dependencies": {
     "ethers": "^5.7.2",
-    "multiformats": "^11.0.1"
+    "multiformats": "^9.9.0"
   }
 }
